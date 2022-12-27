@@ -27,9 +27,12 @@
   "homepage": "https://github.com/WrungCodes/nft.nft-scanner#readme",
   "dependencies": {
     "@types/jest": "^28.1.6",
+    "@types/mongoose": "^5.11.97",
     "@types/supertest": "^2.0.12",
-    "ts-jest": "^28.0.7",
     "jest": "^28.1.3",
+    "mongodb-memory-server": "^8.10.2",
+    "mongoose": "^6.8.1",
+    "ts-jest": "^28.0.7",
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.9.4"
   }
