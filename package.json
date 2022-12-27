@@ -1,0 +1,24 @@
+{
+  "name": "nft-scanner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WrungCodes/nft.nft-scanner.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WrungCodes/nft.nft-scanner/issues"
+  },
+  "homepage": "https://github.com/WrungCodes/nft.nft-scanner#readme",
+  "dependencies": {
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.9.4"
+  }
+}
