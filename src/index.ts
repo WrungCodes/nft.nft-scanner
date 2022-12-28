@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import { Blockchain, BlockchainDoc } from "./models/blockchain";
+import { Scanner } from "./services/scanner";
 
 const start = async () => {
     /**
@@ -18,6 +20,28 @@ const start = async () => {
         console.log('Connected to MongoDb');
     } catch (err) {
         console.error(err);
+    }
+
+    let blockchainsInDatabase: (BlockchainDoc & {_id: mongoose.Types.ObjectId; })[] = [];
+
+    /**
+    * Get all enabled blockchains in the database so we can begin extracting
+    */
+    try {
+        blockchainsInDatabase = await Blockchain.find({ enabled: true });
+    } catch (err) {
+        console.error(err);
+    }
+
+    for (const blockchain of blockchainsInDatabase) {
+        
+        try {
+            const scanners : Scanner = new Scanner(blockchain)
+            await scanners.init()
+            console.log(`Scanner [${blockchain.name}] is starting ....`)
+        } catch (error) {
+            console.log(`Scanner [${blockchain.name}] error ${error} ....`)
+        }
     }
 }
 
