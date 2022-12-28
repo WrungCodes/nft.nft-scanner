@@ -33,6 +33,7 @@ afterAll(async () => {
     /**
      * Stop MongoDB Memory Server and close Mongoose after the tests
      */
-    await mongo.stop();
     await mongoose.connection.close();
-});
+    await mongo.stop();
+    
+}, 180_000);
