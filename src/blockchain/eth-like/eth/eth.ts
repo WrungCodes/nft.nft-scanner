@@ -1,16 +1,16 @@
 import { EthLike, EthLikeFeatures } from "../eth-like";
 import Web3 from 'web3';
 
-export class BSC extends EthLike {
-    static blockchainName = 'BSC';
+export class ETH extends EthLike {
+    static blockchainName = 'ETH';
     
-    provider: string = 'BSC';
+    provider: string = 'ETH';
 
     blockTime: number = 3;
 
     features: EthLikeFeatures = {
-        nativeProviderName: 'BNB',
-        erc721ProviderName: 'BEP721',
+        nativeProviderName: 'ETH',
+        erc721ProviderName: 'ERC721',
         zeroAddress: '0x0000000000000000000000000000000000000000000000000000000000000000',
         eventSignatures: [ Web3.utils.sha3('Transfer(address,address,uint256)') ]
     };
