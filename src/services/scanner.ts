@@ -1,5 +1,7 @@
 import { BlockchainDoc } from "../models/blockchain";
 import blockchains from "../blockchain/index"
+import { BlockchainStreamReader } from "../streams/blockchain-stream-reader";
+import { BlockchainStreamWriter } from "../streams/blockchain-stream-writer";
 
 export class Scanner {
     constructor(
@@ -13,7 +15,10 @@ export class Scanner {
 
         if(blockchains.has(this.model.symbol))
         {
-            // Implement Read Stream and Write Stream then Pipe it
+            const blockchainStreamReader = new BlockchainStreamReader(blockchains.get(this.model.symbol), this);
+            const blockchainStreamWriter = new BlockchainStreamWriter(this)
+
+            blockchainStreamReader.pipe(blockchainStreamWriter)
         }
         else
         { 

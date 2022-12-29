@@ -1,3 +1,5 @@
+import { sleep } from "./sleep";
+
 interface FullRetrySettings {
     retry: number;
     sleep: number;
@@ -45,12 +47,3 @@ export async function retryUntilSuccess(context: any, target: (...args: any[]) =
       }
     }
 }
-
-export const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
-
-export const timeout = (time: number): Promise<Error> =>
-  new Promise((resolve, reject) =>
-    setTimeout(() => {
-      reject(new Error('REQUEST_TIMEOUT_ERROR'));
-    }, time)
-);
