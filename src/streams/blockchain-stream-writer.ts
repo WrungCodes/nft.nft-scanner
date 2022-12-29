@@ -26,6 +26,6 @@ export class BlockchainStreamWriter extends Writable{
 
         // raise and event to our event provider that block has been recieved
 
-        console.info(`[${this.scanner.model.name}] BLOCK #${chunk.height} HAS BEEN WRITTEN`);
+        console.log(`[${this.scanner.model.name}] BLOCK #${chunk.height} HAS BEEN WRITTEN`);
     }
 }
