@@ -39,7 +39,7 @@ export class BlockchainStreamReader extends Readable {
          * Push each block into the reader pipe so they can be acted on by the writers.
          */
         for (const block of blocks) {
-            this.push({ ...block, blocknumber: this.blocknumberToExtract, height: this.blockchainHeight });
+            this.push({ ...block, });
 
             /**
              * Increase the block number to extract so that the next cursor read will go for the next block.

@@ -24,16 +24,16 @@ describe('Start App', () => {
     });
 
     it('Start App', async () => {
-        // let count = 3
-        // for (const blockchain of blockchainsInDatabase) 
-        // {
-        //     try {
-        //         const scanners : Scanner = new Scanner(blockchain)
-        //         await scanners.init()
-        //         console.log(`Scanner [${blockchain.name}] is starting ....`)
-        //     } catch (error) {
-        //         console.log(`Scanner [${blockchain.name}] error ${error} ....`)
-        //     }
-        // }
+        let count = 3
+        for (const blockchain of blockchainsInDatabase) 
+        {
+            try {
+                const scanners : Scanner = new Scanner(blockchain)
+                await scanners.init()
+                console.log(`Scanner [${blockchain.name}] is starting ....`)
+            } catch (error) {
+                console.log(`Scanner [${blockchain.name}] error ${error} ....`)
+            }
+        }
     });
 })

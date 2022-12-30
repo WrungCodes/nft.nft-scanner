@@ -6,6 +6,13 @@ const start = async () => {
     /**
      * This key is for mongodb database
      */
+    if (!process.env.REDIS) {
+        throw new Error('REDIS_URI must be defined');
+    }
+
+    /**
+     * This key is for mongodb database
+     */
     if (!process.env.MONGO_URI) {
         throw new Error('MONGO_URI must be defined');
     }

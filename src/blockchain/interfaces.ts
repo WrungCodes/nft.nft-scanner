@@ -10,7 +10,7 @@ export interface IBlockData {
     /**
      * The height of the block that was scanned 
      */
-    height?: number;
+    height: number;
 
     /**
      * Time the block was created
