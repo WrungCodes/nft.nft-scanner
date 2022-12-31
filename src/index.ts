@@ -20,6 +20,11 @@ const start = async () => {
     }
 
     /**
+     * Using a Scalable Message queue like Kafka, RabbitMQ or Nats Streaming Server 
+     * would be the best for a large application but for now, Redis and BullMQ will do
+     */
+
+    /**
      * This queue is where the the block add functionality is done.
      */
     const blockQueue = new Bull( 'write-block', process.env.REDIS );
