@@ -119,7 +119,8 @@ export abstract class EthLike implements IBlockchainExtractor {
         const blockData: IBlockData = {
             provider: this.provider,
             height: blocknumber,
-            erc721
+            erc721,
+            timestamp: block.timestamp.toString()
         }
 
         return blockData;

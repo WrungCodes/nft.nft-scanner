@@ -19,21 +19,18 @@ describe('Start App', () => {
         }).save()
 
         blockchainsInDatabase = await Blockchain.find({ enabled: true });
-
-        console.log(blockchainsInDatabase)
     });
 
     it('Start App', async () => {
-        // let count = 3
-        // for (const blockchain of blockchainsInDatabase) 
-        // {
-        //     try {
-        //         const scanners : Scanner = new Scanner(blockchain)
-        //         await scanners.init()
-        //         console.log(`Scanner [${blockchain.name}] is starting ....`)
-        //     } catch (error) {
-        //         console.log(`Scanner [${blockchain.name}] error ${error} ....`)
-        //     }
-        // }
+        for (const blockchain of blockchainsInDatabase) 
+        {
+            try {
+                const scanners : Scanner = new Scanner(blockchain)
+                // await scanners.init()
+                console.log(`Scanner [${blockchain.name}] is starting ....`)
+            } catch (error) {
+                console.log(`Scanner [${blockchain.name}] error ${error} ....`)
+            }
+        }
     });
 })
