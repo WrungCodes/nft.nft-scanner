@@ -6,9 +6,6 @@ import { writeBlock } from "./events/write-block";
 
 const start = async () => {
 
-    process.env.REDIS = "redis://127.0.0.1:6379"
-    process.env.MONGO_URI = "mongodb+srv://danieltosinfayemi:mEyya0oKtGWEwUMI@cluster0.2ixnhz5.mongodb.net/nft_scanner?retryWrites=true&w=majority"
-
     /**
      * This key is for mongodb database
      */
