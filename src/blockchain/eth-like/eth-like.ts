@@ -67,22 +67,20 @@ export abstract class EthLike implements IBlockchainExtractor {
          */
         const block: IBlockETHLike = await this.api.eth.getBlock(new BigNumber(blocknumber), true)
 
-        if (block.transactions && block.transactions.length) {
+        /**
+         * Receipts of the transaction
+         */
+        const txData: any[] = [];
 
-            const transactionDataList = [];
+        if (block.transactions && block.transactions.length) {
 
             for( const trans of block.transactions ) 
             {
-                transactionDataList.push([trans.hash, trans.value])
+                const receipt = await this.api.eth.getTransactionReceipt(trans.hash)
+                txData.push([trans.hash, receipt])
             }
 
-            // get all transaction receipt or events from actions in Smart Contracts
-            const receipts = await Promise.all(transactionDataList.map(([txHash, txValue]) => this.api.eth.getTransactionReceipt(txHash)));
-
-            // get the event data from each of the receipts
-            const txData = transactionDataList.map((v, i) => [v, receipts[i]]);
-
-            for (const [[hash, value], receipt] of txData) 
+            for (const [hash, receipt] of txData) 
             {
                 // see if any smart contract execution and it's results
                 for (const log of receipt.logs) 

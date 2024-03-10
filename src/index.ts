@@ -1,16 +1,18 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv'
+import amqp from "amqplib";
 import { Blockchain, BlockchainDoc } from "./models/blockchain";
 import { Scanner } from "./services/scanner";
-import Bull from "bull";
-import { writeBlock } from "./events/write-block";
+import { blockParsedQueue } from "./queues/block-parsed-event"
 
 const start = async () => {
+    dotenv.config()
 
     /**
-     * This key is for mongodb database
+     * This key is for rabbitmq
      */
-    if (!process.env.REDIS) {
-        throw new Error('REDIS_URI must be defined');
+    if (!process.env.RABBITMQ_URI) {
+        throw new Error('RABBITMQ_URI must be defined');
     }
 
     /**
@@ -20,21 +22,14 @@ const start = async () => {
         throw new Error('MONGO_URI must be defined');
     }
 
-    /**
-     * Using a Scalable Message queue like Kafka, RabbitMQ or Nats Streaming Server 
-     * would be the best for a large application but for now, Redis and BullMQ will do
-     */
+    try {
+        await amqp.connect(process.env.RABBITMQ_URI);
+        console.log('Connected to RabbitMQ');
+    } catch (err) {
+        console.error(err);
+    }
 
-    /**
-     * This queue is where the the block add functionality is done.
-     */
-    const blockQueue = new Bull( 'write-block', process.env.REDIS );
-
-    /**
-     * This queue acts like a message queue for other services to recieve blockdata information scanned by 
-     * this service
-     */
-    const uploadAssetQueue = new Bull( 'upload-asset', process.env.REDIS );
+    blockParsedQueue()
 
     /**
      * Here we try to connect to the mongodb database using the Key before procedding
@@ -48,13 +43,6 @@ const start = async () => {
         console.error(err);
     }
 
-    /**
-     * Worker to handle new block data mainly to increased processed blocks count in the database
-     */
-    blockQueue.process((job) => {
-        writeBlock( job, uploadAssetQueue );
-    });
-
     let blockchainsInDatabase: (BlockchainDoc & {_id: mongoose.Types.ObjectId; })[] = [];
 
     /**
@@ -62,6 +50,11 @@ const start = async () => {
     */
     try {
         blockchainsInDatabase = await Blockchain.find({ enabled: true });
+
+        if(blockchainsInDatabase.length == 0){
+            console.log('No blockchain to scan')
+        }
+
     } catch (err) {
         console.error(err);
     }
@@ -76,6 +69,15 @@ const start = async () => {
             console.log(`Scanner [${blockchain.name}] error ${error} ....`)
         }
     }
+
+    process.on('SIGINT', function() {
+        console.log( "\nGracefully shutting down from SIGINT (Ctrl-C)" );
+        process.exit(0);
+    });
+
+    process.on('uncaughtException', function(err) {
+        console.log("Uncaught exception!", err);
+    });
 }
 
 start();

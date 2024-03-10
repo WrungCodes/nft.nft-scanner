@@ -2,21 +2,34 @@ import { Writable } from "stream";
 import { Scanner } from "../services/scanner";
 import { IBlockData } from "../blockchain/interfaces";
 import { retryUntilSuccess } from "../helpers/retry-until-sucessful";
-import Bull from 'bull'
+import amqp from "amqplib";
 
+const block_parsed_event = "block-parsed-event"
 export class BlockchainStreamWriter extends Writable{
 
-    queue;
+    channel: any;
+    connection: any;
 
     constructor(private scanner: Scanner){
         super({ objectMode: true });
+    }
 
-        this.queue = new Bull(
-            'write-block', 
-            process.env.REDIS ?? 'redis://127.0.0.1:6379', 
-        );
+    async getConnection(){
+        if(!this.connection){
+            const connection = await amqp.connect(process.env.RABBITMQ_URI ?? "amqp://localhost");
+            return connection
+        }
+        return this.connection
+    }
 
-        console.log('Created A QUEUE')
+    async getChannel(){
+        if(!this.channel && !this.connection){
+            const connection = await this.getConnection();
+            const channel = await connection.createChannel();
+            await channel.assertQueue(block_parsed_event, { durable: false });
+            return channel
+        }
+        return this.channel
     }
 
     async _write(chunk: IBlockData, encoding: BufferEncoding, callback: (error?: Error | null | undefined) => void): Promise<void> {
@@ -35,8 +48,14 @@ export class BlockchainStreamWriter extends Writable{
         // const time = process.hrtime.bigint();
 
         // raise and event to our event provider that block has been recieved
-        this.queue.add(chunk, {  attempts: Infinity, backoff: 5000 });
+        try {
+            const channel = await this.getChannel()
+            channel.sendToQueue(block_parsed_event, Buffer.from(JSON.stringify(chunk)))
 
-        console.log(`[${this.scanner.model.name}] BLOCK #${chunk.height} HAS BEEN WRITTEN`);
+            console.log(`[${this.scanner.model.name}] BLOCK #${chunk.height} HAS BEEN WRITTEN`);
+        } catch (error) {
+            console.error(error);
+            if (this.connection) await this.connection.close();
+        }
     }
 }
