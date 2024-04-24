@@ -26,6 +26,8 @@
   },
   "homepage": "https://github.com/WrungCodes/nft.nft-scanner#readme",
   "dependencies": {
+    "@solana/spl-token": "^0.4.6",
+    "@solana/web3.js": "^1.91.7",
     "@types/jest": "^28.1.6",
     "@types/mongoose": "^5.11.97",
     "@types/supertest": "^2.0.12",
